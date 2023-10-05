@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="card">
+    <div class="card-header">
+        <strong>
+            {{ book.title }} {{author_name}} </strong>
+    </div>
+
+    <div class="card-body">
+
+        <p class="card-text">
+            <strong>Description: </strong>{{ book.desc }}</p>
+
+        <p class="card-text">
+            <strong>Released at: </strong>{{ book.released_at }}
+        </p>
+
+        <p class="card-text">
+           {{ book.cover }}</p>
+    </div>
+
+</div>
+
+<br/><br/>
+<a href="{% url 'home' %}" class="btn btn-secondary">Back to main page</a>
+<a href="{% url 'delete_book' book.id %}" class="btn btn-danger">Delete book</a>
+<a href="{% url 'update_book' book.id %}" class="btn btn-secondary">Update book info</a>
+
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<table class="table table-borderless table-hover table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th scope="col">  </th>
+        <th scope="col">Title</th>
+        <th scope="col">Description</th>
+        <th scope="col">Date</th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+    {% if books %}
+    {% for book in books %}
+    <tr>
+        <td>{{ book.cover }}</td>
+        <td><a href="book/{{ book.id }}">{{ book.title }}</a></td>
+        <td>{{ book.desc }}</td>
+        <td>{{ record.released_at }}</td>
+    </tr>
+    {% endfor %}
+
+    {% endif %}
+
+    </tbody>
+</table>
+
+
+{% else %}
+
+<div class="col-md-6 offset-md-3">
+<h1>Login</h1>
+<br/>
+
+<form method="POST" action="{% url 'home' %}">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <input type="text" class="form-control" name="username" placeholder="Username" required>
+
+    </div>
+    <br/>
+    <div class="mb-3">
+        <input type="password" class="form-control" name="password" placeholder="Password" required>
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-secondary">Login</button>
+
+</form>
+</div>
+
+{% endif %}
+
+{% endblock %}
