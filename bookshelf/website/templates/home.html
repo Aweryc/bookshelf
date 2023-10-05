@@ -19,7 +19,7 @@
     {% if books %}
     {% for book in books %}
     <tr>
-        <td>{{ book.cover }}</td>
+        <td><img src="{{ book.cover }}"></td>
         <td><a href="book/{{ book.id }}">{{ book.title }}</a></td>
         <td>{{ book.desc }}</td>
         <td>{{ record.released_at }}</td>

@@ -3,6 +3,7 @@
 
 
 <div class="card">
+  <img class="card-img-top" src="{% url 'media/images' book.cover %}" alt="No image...">
     <div class="card-header">
         <strong>
             {{ book.title }} {{author_name}} </strong>
@@ -16,9 +17,6 @@
         <p class="card-text">
             <strong>Released at: </strong>{{ book.released_at }}
         </p>
-
-        <p class="card-text">
-           {{ book.cover }}</p>
     </div>
 
 </div>
