@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+{% if results %}
+<div><h3>Search by "{{ query }}"</h3></div>
+
+<table class="table table-borderless table-hover table-bordered">
+<thead class="table-dark">
+<tr>
+    <th scope="col">Cover</th>
+    <th scope="col">Title</th>
+    <th scope="col">Description</th>
+    <th scope="col">Released, year</th>
+
+</tr>
+</thead>
+<tbody>
+
+{% for book in results %}
+
+
+<tr>
+    <td width="120"><a href="{% url 'book' book.id %}"><img src="{{ book.cover.url }}" width="100"></a></td>
+    <td width="100"><a href="{% url 'book' book.id %}">{{ book.title }}</a></td>
+    <td width="300">{{ book.desc }}</td>
+    <td width="50">{{ book.released_at }}</td>
+</tr>
+<tbody>
+
+{% endfor %}
+
+{% else %}
+<div><h3>Can't find anything for "{{ query }}"</h3></div>
+{% endif %}
+
+
+{% endblock %}

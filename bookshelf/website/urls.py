@@ -13,4 +13,5 @@ urlpatterns = [
                   path('update/<int:pk>', views.update_record, name='update_book'),
                   path('books_list/', views.books_list_api, name='books_list_api'),
                   path('books_list/<int:pk>', views.book_api, name='book_api'),
+                  path('search_books/', views.search_books, name='search_books'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

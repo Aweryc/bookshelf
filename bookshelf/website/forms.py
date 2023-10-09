@@ -50,7 +50,7 @@ class SignUpForm(UserCreationForm):
 class AddBookForm(forms.ModelForm):
     class Meta:
         model = Book
-        exclude = ("user", 'user_add')
+        exclude = ('user_add', ' cover')
 
     title = forms.CharField(required=True, widget=forms.widgets.TextInput(
         attrs={"placeholder": "Title", "class": "form-control"}), label="")
@@ -63,4 +63,4 @@ class AddBookForm(forms.ModelForm):
                                          attrs={"placeholder": "Released at", "class": "form-control"}),
                                      label="")
     # author = forms.ChoiceField(required=True,)
-    cover = forms.ImageField()
+    # cover = forms.ImageField()

@@ -83,12 +83,14 @@ def delete_record(request: Request, pk) -> HttpResponse:
 
 
 def add_book(request: Request) -> HttpResponse:
-    form = AddBookForm(request.POST or None)
+    flag = False
     if request.user.is_authenticated:
+        form = AddBookForm(request.POST or None, request.FILES)
         if request.method == "POST":
-            form.user_add = request.user
             if form.is_valid():
-                form.save()
+                temp_form = form.save(commit=False)
+                temp_form.user_add = request.user
+                temp_form.save()
                 messages.success(request, f"Record created successfully.")
                 return redirect('home')
 
@@ -113,17 +115,26 @@ def update_record(request: Request, pk) -> HttpResponse:
 
 
 @api_view(['GET'])
-def books_list_api(request: Request) -> HttpResponse:
+def books_list_api(request: Request) -> Response:
     record = Book.objects.all()
     ser_books = BookSerializer(record, many=True)
     return Response(ser_books.data)
 
 
 @api_view(['GET'])
-def book_api(request: Request, pk) -> HttpResponse:
+def book_api(request: Request, pk) -> Response:
     try:
         record = Book.objects.get(pk=pk)
         one_book = BookSerializer(record)
         return Response(one_book.data)
     except Exception:
         return Response({'message': f'Book # {pk} not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+def search_books(request: Request) -> HttpResponse:
+    if request.method == "POST":
+        query = request.POST['query']
+        results = Book.objects.filter(title__contains=query)
+        return render(request, 'search_books.html', {'results': results, 'query': query})
+    else:
+        return render(request, 'search_books.html', {})

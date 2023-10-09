@@ -1,43 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
-<!--<div class="card">-->
-
-
-<!--    <div class="card-header">-->
-<!--        <strong>-->
-<!--            {{ book.title }}, {{author_name}} </strong>-->
-<!--    </div>-->
-
-<!--    <div class="card-body">-->
-
-<!--        <p class="card-text">-->
-<!--            <strong>Description: </strong>{{ book.desc }}</p>-->
-
-<!--        <p class="card-text">-->
-<!--            <strong>Released at: </strong>{{ book.released_at }}-->
-<!--        </p>-->
-<!--    </div>-->
-
-<!--    {% if book.cover %}-->
-<!--    <img src="{{ book.cover.url }}" width="200">-->
-<!--    {% endif %}-->
-<!--</div>-->
-
 <div class="card mb-3">
   <div class="row g-0">
-    <div class="col-md-4">
-      <img src="{{ book.cover.url }}" class="img-fluid rounded-start">
+    <div class="col-md-2">
+      <img src="{{ book.cover.url }}" class="img-fluid rounded-start" width="250">
     </div>
     <div class="col-md-8">
       <div class="card-body">
         <h5 class="card-title">
             <strong>{{ book.title }}, {{author_name}} </strong>
+                        <br/>            <br/>
+
         </h5>
         <p class="card-text">
             <strong>Description: </strong>{{ book.desc }}
-            <br/>
+            <br/>            <br/>
             <strong>Released at: </strong>{{ book.released_at }}
         </p>
       </div>

@@ -10,11 +10,12 @@ class Author(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+
         return f"{self.first_name} {self.last_name}"
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=10)
+    title = models.CharField(max_length=50)
     desc = models.CharField(max_length=500)
     released_at = models.IntegerField()  # day of release
     user_add = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
