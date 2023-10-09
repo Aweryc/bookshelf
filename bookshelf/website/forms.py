@@ -48,40 +48,19 @@ class SignUpForm(UserCreationForm):
 
 # Create Add Record Form
 class AddBookForm(forms.ModelForm):
-
     class Meta:
         model = Book
-        exclude = ("user", )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['author'].queryset = Author.objects.none()
-
-        if 'author' in self.data:
-            try:
-                author_id = int(self.data.get('author'))
-                self.fields['author_id'].queryset = Author.objects.filter(country_id=author_id).order_by('name')
-            except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty City queryset
-        elif self.instance.pk:
-            self.fields['city'].queryset = self.instance.author_name.city_set.order_by('name')
+        exclude = ("user", 'user_add')
 
     title = forms.CharField(required=True, widget=forms.widgets.TextInput(
         attrs={"placeholder": "Title", "class": "form-control"}), label="")
 
-    author_name = forms.ChoiceField(required=True, widget=forms.widgets.ChoiceWidget(
-        attrs={"placeholder": "Author Name", "class": "form-control"}), label="")
-
     desc = forms.CharField(required=True, widget=forms.widgets.TextInput(
         attrs={"placeholder": "Description", "class": "form-control"}), label="")
 
-    released_at = forms.DateField(required=True,
-                                  widget=forms.widgets.DateInput(
-                                      attrs={"placeholder": "Released at", "class": "form-control"}),
-                                  label="")
-
-    author_id = forms.IntegerField()
-
-    user_add_id = forms.IntegerField()
-
-
+    released_at = forms.IntegerField(required=True,
+                                     widget=forms.widgets.DateInput(
+                                         attrs={"placeholder": "Released at", "class": "form-control"}),
+                                     label="")
+    # author = forms.ChoiceField(required=True,)
+    cover = forms.ImageField()

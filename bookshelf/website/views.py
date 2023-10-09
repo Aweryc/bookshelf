@@ -83,21 +83,16 @@ def delete_record(request: Request, pk) -> HttpResponse:
 
 
 def add_book(request: Request) -> HttpResponse:
-    form = AddBookForm(request.POST, request.FILES)
-
-    authors = Author.objects.all()
-
+    form = AddBookForm(request.POST or None)
     if request.user.is_authenticated:
-        # form.author_name =
         if request.method == "POST":
+            form.user_add = request.user
             if form.is_valid():
-                user_id = request.user.id
-                # form.u
                 form.save()
                 messages.success(request, f"Record created successfully.")
                 return redirect('home')
 
-        return render(request, 'add_book.html', {'form': form, 'authors': authors})
+        return render(request, 'add_book.html', {'form': form})
     else:
         messages.success(request, "You must be logged in to created new Book.")
         return redirect('home')

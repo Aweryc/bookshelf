@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Author(models.Model):
@@ -13,13 +14,12 @@ class Author(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=10)
     desc = models.CharField(max_length=500)
-    author = models.ForeignKey(Author, null=True, on_delete=models.SET_NULL)
-    # author_id = models.IntegerField(null=True)
     released_at = models.IntegerField()  # day of release
-    user_add_id = models.BigIntegerField(null=True)
+    user_add = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(Author, null=True, on_delete=models.SET_NULL)
     cover = models.ImageField(upload_to='images/')
 
     def __str__(self):
