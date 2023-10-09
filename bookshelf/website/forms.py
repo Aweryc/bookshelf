@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Book
+from .models import Book, Author
 
 
 # from models import Record
@@ -48,29 +48,40 @@ class SignUpForm(UserCreationForm):
 
 # Create Add Record Form
 class AddBookForm(forms.ModelForm):
-    first_name = forms.CharField(required=True, widget=forms.widgets.TextInput(
-        attrs={"placeholder": "First Name", "class": "form-control"}), label="")
-    last_name = forms.CharField(required=True, widget=forms.widgets.TextInput(
-        attrs={"placeholder": "Last Name", "class": "form-control"}), label="")
-    email = forms.CharField(required=True,
-                            widget=forms.widgets.TextInput(attrs={"placeholder": "Email", "class": "form-control"}),
-                            label="")
-    phone = forms.CharField(required=True,
-                            widget=forms.widgets.TextInput(attrs={"placeholder": "Phone", "class": "form-control"}),
-                            label="")
-    address = forms.CharField(required=True,
-                              widget=forms.widgets.TextInput(attrs={"placeholder": "Address", "class": "form-control"}),
-                              label="")
-    city = forms.CharField(required=True,
-                           widget=forms.widgets.TextInput(attrs={"placeholder": "City", "class": "form-control"}),
-                           label="")
-    state = forms.CharField(required=True,
-                            widget=forms.widgets.TextInput(attrs={"placeholder": "State", "class": "form-control"}),
-                            label="")
-    zipcode = forms.CharField(required=True,
-                              widget=forms.widgets.TextInput(attrs={"placeholder": "Zipcode", "class": "form-control"}),
-                              label="")
 
     class Meta:
         model = Book
-        exclude = ("user",)
+        exclude = ("user", )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['author'].queryset = Author.objects.none()
+
+        if 'author' in self.data:
+            try:
+                author_id = int(self.data.get('author'))
+                self.fields['author_id'].queryset = Author.objects.filter(country_id=author_id).order_by('name')
+            except (ValueError, TypeError):
+                pass  # invalid input from the client; ignore and fallback to empty City queryset
+        elif self.instance.pk:
+            self.fields['city'].queryset = self.instance.author_name.city_set.order_by('name')
+
+    title = forms.CharField(required=True, widget=forms.widgets.TextInput(
+        attrs={"placeholder": "Title", "class": "form-control"}), label="")
+
+    author_name = forms.ChoiceField(required=True, widget=forms.widgets.ChoiceWidget(
+        attrs={"placeholder": "Author Name", "class": "form-control"}), label="")
+
+    desc = forms.CharField(required=True, widget=forms.widgets.TextInput(
+        attrs={"placeholder": "Description", "class": "form-control"}), label="")
+
+    released_at = forms.DateField(required=True,
+                                  widget=forms.widgets.DateInput(
+                                      attrs={"placeholder": "Released at", "class": "form-control"}),
+                                  label="")
+
+    author_id = forms.IntegerField()
+
+    user_add_id = forms.IntegerField()
+
+

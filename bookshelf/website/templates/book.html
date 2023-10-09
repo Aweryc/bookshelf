@@ -2,24 +2,50 @@
 {% block content %}
 
 
-<div class="card">
-  <img class="card-img-top" src="{% url 'media/images' book.cover %}" alt="No image...">
-    <div class="card-header">
-        <strong>
-            {{ book.title }} {{author_name}} </strong>
+<!--<div class="card">-->
+
+
+<!--    <div class="card-header">-->
+<!--        <strong>-->
+<!--            {{ book.title }}, {{author_name}} </strong>-->
+<!--    </div>-->
+
+<!--    <div class="card-body">-->
+
+<!--        <p class="card-text">-->
+<!--            <strong>Description: </strong>{{ book.desc }}</p>-->
+
+<!--        <p class="card-text">-->
+<!--            <strong>Released at: </strong>{{ book.released_at }}-->
+<!--        </p>-->
+<!--    </div>-->
+
+<!--    {% if book.cover %}-->
+<!--    <img src="{{ book.cover.url }}" width="200">-->
+<!--    {% endif %}-->
+<!--</div>-->
+
+<div class="card mb-3">
+  <div class="row g-0">
+    <div class="col-md-4">
+      <img src="{{ book.cover.url }}" class="img-fluid rounded-start">
     </div>
-
-    <div class="card-body">
-
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">
+            <strong>{{ book.title }}, {{author_name}} </strong>
+        </h5>
         <p class="card-text">
-            <strong>Description: </strong>{{ book.desc }}</p>
-
-        <p class="card-text">
+            <strong>Description: </strong>{{ book.desc }}
+            <br/>
             <strong>Released at: </strong>{{ book.released_at }}
         </p>
+      </div>
     </div>
-
+  </div>
 </div>
+
+
 
 <br/><br/>
 <a href="{% url 'home' %}" class="btn btn-secondary">Back to main page</a>

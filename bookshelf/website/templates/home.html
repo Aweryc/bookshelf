@@ -7,10 +7,10 @@
 <table class="table table-borderless table-hover table-bordered">
     <thead class="table-dark">
     <tr>
-        <th scope="col">  </th>
+        <th scope="col">Cover</th>
         <th scope="col">Title</th>
         <th scope="col">Description</th>
-        <th scope="col">Date</th>
+        <th scope="col">Released, year</th>
 
     </tr>
     </thead>
@@ -19,10 +19,15 @@
     {% if books %}
     {% for book in books %}
     <tr>
-        <td><img src="{{ book.cover }}"></td>
-        <td><a href="book/{{ book.id }}">{{ book.title }}</a></td>
-        <td>{{ book.desc }}</td>
-        <td>{{ record.released_at }}</td>
+        {% if book.cover %}
+        <td width="120"><a href="book/{{ book.id }}"><img src="{{ book.cover.url }}" width="100"></a></td>
+        {%else%}
+        <td width="120">No image...</td>
+        {% endif %}
+
+        <td width="100"><a href="book/{{ book.id }}">{{ book.title }}</a></td>
+        <td width="300">{{ book.desc }}</td>
+        <td width="50">{{ book.released_at }}</td>
     </tr>
     {% endfor %}
 
@@ -35,24 +40,24 @@
 {% else %}
 
 <div class="col-md-6 offset-md-3">
-<h1>Login</h1>
-<br/>
-
-<form method="POST" action="{% url 'home' %}">
-    {% csrf_token %}
-
-    <div class="mb-3">
-        <input type="text" class="form-control" name="username" placeholder="Username" required>
-
-    </div>
+    <h1>Login</h1>
     <br/>
-    <div class="mb-3">
-        <input type="password" class="form-control" name="password" placeholder="Password" required>
-    </div>
-    <br/>
-    <button type="submit" class="btn btn-secondary">Login</button>
 
-</form>
+    <form method="POST" action="{% url 'home' %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <input type="text" class="form-control" name="username" placeholder="Username" required>
+
+        </div>
+        <br/>
+        <div class="mb-3">
+            <input type="password" class="form-control" name="password" placeholder="Password" required>
+        </div>
+        <br/>
+        <button type="submit" class="btn btn-secondary">Login</button>
+
+    </form>
 </div>
 
 {% endif %}

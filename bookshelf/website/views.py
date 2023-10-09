@@ -1,10 +1,14 @@
 from urllib.request import Request
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import *
 from .models import Author, Book, Comment
+from .serializers import BookSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework import status
 
 
 def home(request: Request) -> HttpResponse:
@@ -78,16 +82,22 @@ def delete_record(request: Request, pk) -> HttpResponse:
     return redirect('home')
 
 
-def add_record(request: Request) -> HttpResponse:
-    form = AddBookForm(request.POST or None)
+def add_book(request: Request) -> HttpResponse:
+    form = AddBookForm(request.POST, request.FILES)
+
+    authors = Author.objects.all()
+
     if request.user.is_authenticated:
+        # form.author_name =
         if request.method == "POST":
             if form.is_valid():
+                user_id = request.user.id
+                # form.u
                 form.save()
                 messages.success(request, f"Record created successfully.")
                 return redirect('home')
 
-        return render(request, 'add_record.html', {'form': form})
+        return render(request, 'add_book.html', {'form': form, 'authors': authors})
     else:
         messages.success(request, "You must be logged in to created new Book.")
         return redirect('home')
@@ -105,3 +115,20 @@ def update_record(request: Request, pk) -> HttpResponse:
     else:
         messages.success(request, "You must be logged in to update this page.")
         return redirect('home')
+
+
+@api_view(['GET'])
+def books_list_api(request: Request) -> HttpResponse:
+    record = Book.objects.all()
+    ser_books = BookSerializer(record, many=True)
+    return Response(ser_books.data)
+
+
+@api_view(['GET'])
+def book_api(request: Request, pk) -> HttpResponse:
+    try:
+        record = Book.objects.get(pk=pk)
+        one_book = BookSerializer(record)
+        return Response(one_book.data)
+    except Exception:
+        return Response({'message': f'Book # {pk} not found.'}, status=status.HTTP_404_NOT_FOUND)
