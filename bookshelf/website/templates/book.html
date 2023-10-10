@@ -29,6 +29,33 @@
 <a href="{% url 'home' %}" class="btn btn-secondary">Back to main page</a>
 <a href="{% url 'delete_book' book.id %}" class="btn btn-danger">Delete book</a>
 <a href="{% url 'update_book' book.id %}" class="btn btn-secondary">Update book info</a>
+<br/>
+<br/>
+{% if comments %}
+<p>Comments:</p>
+<br/>
+<ul class="list-group">
+    {% for comment in comments %}
 
+    <li class="list-group-item">
+        # {{comment.id}} <strong>{{comment.user_add.username}}:</strong> {{comment.text}}</li>
+    {% endfor %}
+
+</ul>
+{% else %}
+<p>You can be the first to comment this book:</p>
+
+{% endif %}
+<br/>
+
+<form class="d-flex" role="search" method="post" action="{% url 'add_comment' book.id %}">
+    {% csrf_token %}
+
+    <input class="form-control me-2" placeholder="comment..." aria-label="Comment"
+           name="comment">
+    <button class="btn btn-outline-secondary" type="submit">Post</button>
+</form>
+
+</form>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Book, Author
+from .models import Book, Author, Comment
 
 
 # from models import Record
@@ -70,3 +70,9 @@ class AddAuthorForm(forms.ModelForm):
     class Meta:
         model = Author
         exclude = ('user', 'user_add')
+
+
+class AddCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        exclude = ('user', 'user_add', 'book')

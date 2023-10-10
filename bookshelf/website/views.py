@@ -68,7 +68,8 @@ def book(request: Request, pk) -> HttpResponse:
         book = Book.objects.get(id=pk)
         author = Author.objects.get(id=book.author_id)
         author_name = f'{author.last_name.title()} {author.first_name.capitalize()[0]}.'
-        return render(request, 'book.html', {'book': book, 'author_name': author_name})
+        comments = Comment.objects.filter(book_id=pk)
+        return render(request, 'book.html', {'book': book, 'author_name': author_name, 'comments': comments})
     else:
         messages.success(request, "You must be logged in to view this page.")
         return redirect('home')
@@ -164,3 +165,16 @@ def add_author(request: Request) -> HttpResponse:
     else:
         messages.success(request, "You must be logged in to created new Book.")
         return redirect('home')
+
+
+def add_comment(request: Request, pk) -> HttpResponse:
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            comment = Comment()
+            comment.user_add = request.user
+            comment.book = Book.objects.get(pk=pk)
+            comment.text = request.POST['comment']
+            comment.save()
+            messages.success(request, f"Comment added successfully.")
+            return redirect('home')
+

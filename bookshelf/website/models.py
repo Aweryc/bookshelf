@@ -28,10 +28,10 @@ class Book(models.Model):
 
 
 class Comment(models.Model):
-    user_add_id = models.BigIntegerField()
-    text = models.CharField(max_length=250)
-    book_id = models.BigIntegerField(null=False)
+    user_add = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    text = models.CharField(max_length=500)
+    book = models.ForeignKey(Book, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Book {self.id}"
+        return f"Comment {self.id}"
