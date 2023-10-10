@@ -64,3 +64,9 @@ class AddBookForm(forms.ModelForm):
                                      label="")
     # author = forms.ChoiceField(required=True,)
     # cover = forms.ImageField()
+
+
+class AddAuthorForm(forms.ModelForm):
+    class Meta:
+        model = Author
+        exclude = ('user', 'user_add')

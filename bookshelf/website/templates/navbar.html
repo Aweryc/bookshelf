@@ -8,8 +8,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'add_book' %}">Add new book</a>
+                <li/>
+
                 <li class="nav-item ">
-                    <a class="nav-link active" href="{% url 'add_book' %}">Add new book</a>
+                    <a class="nav-link active" href="{% url 'add_author' %}">Add new author</a>
                 <li/>
 
 
@@ -20,7 +24,8 @@
                 <form class="d-flex" role="search" method="post" action="{% url 'search_books' %}">
                     {% csrf_token %}
 
-                    <input class="form-control me-2" type="search" placeholder="Search books..." aria-label="Search" name="query">
+                    <input class="form-control me-2" type="search" placeholder="Search books..." aria-label="Search"
+                           name="query">
                     <button class="btn btn-outline-secondary" type="submit">Search</button>
                 </form>
 

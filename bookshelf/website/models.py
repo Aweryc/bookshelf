@@ -8,9 +8,9 @@ class Author(models.Model):
     dob = models.DateField()  # day of birth
     bio = models.CharField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
+    user_add = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
-
         return f"{self.first_name} {self.last_name}"
 
 

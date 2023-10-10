@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Updating record</h1>
-
+<p><i>Note: If can't find your author in dropdown menu, please go to
+    <a href="{% url 'add_author' %}">Add new author</a>
+    and come back here.</i></p>
 <div class="col-md-6 offset-md-3">
-    <form method="POST" >
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.as_p}}
 

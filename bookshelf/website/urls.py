@@ -10,6 +10,7 @@ urlpatterns = [
                   path('book/<int:pk>', views.book, name='book'),
                   path('delete/<int:pk>', views.delete_record, name='delete_book'),
                   path('add_book/', views.add_book, name='add_book'),
+                  path('add_author/', views.add_author, name='add_author'),
                   path('update/<int:pk>', views.update_record, name='update_book'),
                   path('books_list/', views.books_list_api, name='books_list_api'),
                   path('books_list/<int:pk>', views.book_api, name='book_api'),
