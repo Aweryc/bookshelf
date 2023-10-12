@@ -1,7 +1,15 @@
 ### Bookshelf
-It's a small project to store a books, authors and comments about books for registered users.
 
+It's a small project to store a books, authors and comments about books for registered users.
 Also, you can search book on site.
+
+Bookshelf API has some endpoints:
+
+1. Get a list of all books: http://127.0.0.1:8000/book_list/
+2. Get an info about one book:  http://127.0.0.1:8000/book_list/{book_id}.
+
+   Where book_id: int
+
 
 1. To run a project please clone via git in a folder on your machine.
 2. Set a virtual environment: python -m venv venv.
