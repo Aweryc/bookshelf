@@ -68,7 +68,7 @@ def book(request: Request, pk) -> HttpResponse:
         return redirect('home')
 
 
-def delete_record(request: Request, pk) -> HttpResponse:
+def delete_book(request: Request, pk) -> HttpResponse:
     if request.user.is_authenticated:
 
         del_it = Book.objects.get(id=pk)
