@@ -1,3 +1,4 @@
+from typing import Optional
 from urllib.request import Request
 
 from django.db.models import Q
@@ -61,11 +62,7 @@ def register_user(request: Request) -> HttpResponse:
 
 def book(request: Request, pk) -> HttpResponse:
     if request.user.is_authenticated:
-        book = Book.objects.get(id=pk)
-        author = Author.objects.get(id=book.author_id)
-        author_name = f'{author.last_name.title()} {author.first_name.capitalize()[0]}.'
-        comments = Comment.objects.filter(book_id=pk)
-        return render(request, 'book.html', {'book': book, 'author_name': author_name, 'comments': comments})
+        return render_a_book(request, pk)
     else:
         messages.success(request, "You must be logged in to view this page.")
         return redirect('home')
@@ -101,23 +98,26 @@ def add_book(request: Request) -> HttpResponse:
         return redirect('home')
 
 
-def update_record(request: Request, pk) -> HttpResponse:
+def update_book(request: Request, pk) -> HttpResponse:
     if request.user.is_authenticated:
         cur_record = Book.objects.get(id=pk)
         form = AddBookForm(request.POST or None, instance=cur_record)
         if request.method == "POST":
-            form = AddBookForm(request.POST or None, request.FILES)
+            if request.FILES:
+                form = AddBookForm(request.POST or None, request.FILES)
+            else:
+                form = AddBookForm(request.POST or None, instance=cur_record)
             if form.is_valid():
                 temp_form = form.save(commit=False)
                 temp_form.user_add = request.user
                 temp_form.save()
                 messages.success(request, f"Book # {pk} updated successfully!")
-                return redirect('home')
+                return render_a_book(request, pk)
 
         return render(request, 'update_book.html', {'form': form})
     else:
         messages.success(request, "You must be logged in to update this page.")
-        return redirect('home')
+        return render_a_book(request, pk)
 
 
 def search_books(request: Request) -> HttpResponse:
@@ -155,7 +155,34 @@ def add_comment(request: Request, pk) -> HttpResponse:
             comment = Comment()
             comment.user_add = request.user
             comment.book = Book.objects.get(pk=pk)
+            if not request.POST['comment']:
+                return render_a_book(request, pk)
+
             comment.text = request.POST['comment']
+
             comment.save()
             messages.success(request, f"Comment added successfully.")
-            return redirect('home')
+
+            return render_a_book(request, pk)
+
+        # elif request.method == "GET":
+        #
+        #     book: Book = Book.objects.get(id=pk)
+        #     author = Author.objects.get(id=book.author.id)
+        #     author_name = f'{author.last_name.title()} {author.first_name.capitalize()[0]}.'
+        #     comments = Comment.objects.filter(book_id=pk)
+        #
+        #     return render(request, 'book.html', {'book': book, 'author_name': author_name, 'comments': comments})
+
+
+def render_a_book(request: Request, pk) -> HttpResponse:
+    """    Rendering a book page with a comments
+    :type pk: Book id
+    :type request: Request from client
+    """
+    book: Book = Book.objects.get(id=pk)
+    author = Author.objects.get(id=book.author.id)
+    author_name = f'{author.last_name.title()} {author.first_name.capitalize()[0]}.'
+    comments = Comment.objects.filter(book_id=pk)
+
+    return render(request, 'book.html', {'book': book, 'author_name': author_name, 'comments': comments})
