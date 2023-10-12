@@ -180,7 +180,7 @@ def render_a_book(request: Request, pk) -> HttpResponse:
     :type pk: Book id
     :type request: Request from client
     """
-    book: Book = Book.objects.get(id=pk)
+    book = Book.objects.get(id=pk)
     author = Author.objects.get(id=book.author.id)
     author_name = f'{author.last_name.title()} {author.first_name.capitalize()[0]}.'
     comments = Comment.objects.filter(book_id=pk)
