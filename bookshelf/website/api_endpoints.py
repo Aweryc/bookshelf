@@ -10,6 +10,10 @@ from .serializers import BookSerializer
 
 @api_view(['GET'])
 def books_list_api(request: Request) -> Response:
+    """
+    :param request: request from client
+    :return: json data of all books
+    """
     record = Book.objects.all()
     ser_books = BookSerializer(record, many=True)
     return Response(ser_books.data)
@@ -17,6 +21,10 @@ def books_list_api(request: Request) -> Response:
 
 @api_view(['GET'])
 def book_api(request: Request, pk) -> Response:
+    """
+    :param request: request from client
+    :return: json data of one book with id equals pk
+    """
     try:
         record = Book.objects.get(pk=pk)
         one_book = BookSerializer(record)
