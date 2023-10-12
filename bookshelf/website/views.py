@@ -1,16 +1,12 @@
 from urllib.request import Request
 
 from django.db.models import Q
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import *
 from .models import Author, Book, Comment
-from .serializers import BookSerializer
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status
 from django.core.paginator import Paginator
 
 
@@ -124,27 +120,13 @@ def update_record(request: Request, pk) -> HttpResponse:
         return redirect('home')
 
 
-@api_view(['GET'])
-def books_list_api(request: Request) -> Response:
-    record = Book.objects.all()
-    ser_books = BookSerializer(record, many=True)
-    return Response(ser_books.data)
-
-
-@api_view(['GET'])
-def book_api(request: Request, pk) -> Response:
-    try:
-        record = Book.objects.get(pk=pk)
-        one_book = BookSerializer(record)
-        return Response(one_book.data)
-    except Exception:
-        return Response({'message': f'Book # {pk} not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-
 def search_books(request: Request) -> HttpResponse:
     if request.method == "POST":
         query = request.POST['query']
-        results = Book.objects.filter(Q(title__contains=query) | Q(desc__contains=query))
+        if query:
+            results = Book.objects.filter(Q(title__contains=query) | Q(desc__contains=query))
+        else:
+            results = None
         return render(request, 'search_books.html', {'results': results, 'query': query})
     else:
         return render(request, 'search_books.html', {})
@@ -177,4 +159,3 @@ def add_comment(request: Request, pk) -> HttpResponse:
             comment.save()
             messages.success(request, f"Comment added successfully.")
             return redirect('home')
-

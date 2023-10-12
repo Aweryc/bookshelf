@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from . import views
+
+from . import api_endpoints, views
 
 urlpatterns = [
                   path('', views.home, name='home'),
@@ -13,7 +14,7 @@ urlpatterns = [
                   path('add_author/', views.add_author, name='add_author'),
                   path('add_comment/<int:pk>', views.add_comment, name='add_comment'),
                   path('update/<int:pk>', views.update_record, name='update_book'),
-                  path('books_list/', views.books_list_api, name='books_list_api'),
-                  path('books_list/<int:pk>', views.book_api, name='book_api'),
+                  path('books_list/', api_endpoints.books_list_api, name='books_list_api'),
+                  path('books_list/<int:pk>', api_endpoints.book_api, name='book_api'),
                   path('search_books/', views.search_books, name='search_books'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

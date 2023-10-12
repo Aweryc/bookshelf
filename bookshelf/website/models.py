@@ -16,12 +16,12 @@ class Author(models.Model):
 
 class Book(models.Model):
     title = models.CharField(max_length=50)
-    desc = models.CharField(max_length=500)
+    author = models.ForeignKey(Author, null=True, on_delete=models.SET_NULL)
     released_at = models.IntegerField()  # day of release
+    desc = models.CharField(max_length=500)
+    cover = models.ImageField(upload_to='images/')
     user_add = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(Author, null=True, on_delete=models.SET_NULL)
-    cover = models.ImageField(upload_to='images/')
 
     def __str__(self):
         return f"Book {self.title}"
