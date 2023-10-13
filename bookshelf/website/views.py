@@ -13,9 +13,12 @@ from django.core.paginator import Paginator
 
 def home(request: Request) -> HttpResponse:
     books = Book.objects.all()
+
+    # Prepare a pagination of all books
     books_paginator = Paginator(books, 2)
     page = request.GET.get('page')
     paged_books = books_paginator.get_page(page)
+
     # Check if user logging in
     if request.method == "POST":
         username = request.POST['username']
@@ -31,10 +34,6 @@ def home(request: Request) -> HttpResponse:
             return redirect('home')
     else:
         return render(request, 'home.html', {'books': paged_books})
-
-
-# def login_user(request):
-#     pass
 
 
 def logout_user(request: Request) -> HttpResponse:
@@ -122,7 +121,7 @@ def update_book(request: Request, pk) -> HttpResponse:
 
 def search_books(request: Request) -> HttpResponse:
     if request.method == "POST":
-        query = request.POST['query']
+        query: str = request.POST['query'].strip()
         if query:
             results = Book.objects.filter(Q(title__contains=query) | Q(desc__contains=query))
         else:
@@ -145,7 +144,7 @@ def add_author(request: Request) -> HttpResponse:
 
         return render(request, 'add_author.html', {'form': form})
     else:
-        messages.success(request, "You must be logged in to created new Book.")
+        messages.success(request, "You must be logged in to created new author.")
         return redirect('home')
 
 
@@ -155,34 +154,28 @@ def add_comment(request: Request, pk) -> HttpResponse:
             comment = Comment()
             comment.user_add = request.user
             comment.book = Book.objects.get(pk=pk)
+
+            # If comment string is empty just show a book page.
             if not request.POST['comment']:
                 return render_a_book(request, pk)
 
+            # Otherwise save and post a comment
             comment.text = request.POST['comment']
-
             comment.save()
             messages.success(request, f"Comment added successfully.")
 
             return render_a_book(request, pk)
 
-        # elif request.method == "GET":
-        #
-        #     book: Book = Book.objects.get(id=pk)
-        #     author = Author.objects.get(id=book.author.id)
-        #     author_name = f'{author.last_name.title()} {author.first_name.capitalize()[0]}.'
-        #     comments = Comment.objects.filter(book_id=pk)
-        #
-        #     return render(request, 'book.html', {'book': book, 'author_name': author_name, 'comments': comments})
-
 
 def render_a_book(request: Request, pk) -> HttpResponse:
-    """    Rendering a book page with a comments
+    """Rendering a book page with a comments
     :type pk: Book id
     :type request: Request from client
     """
-    book = Book.objects.get(id=pk)
-    author = Author.objects.get(id=book.author.id)
-    author_name = f'{author.last_name.title()} {author.first_name.capitalize()[0]}.'
+    one_book = Book.objects.get(id=pk)
+
+    # Format a author name
+    author_name = f'{one_book.author.last_name.title()} {one_book.author.first_name.capitalize()[0]}.'
     comments = Comment.objects.filter(book_id=pk)
 
-    return render(request, 'book.html', {'book': book, 'author_name': author_name, 'comments': comments})
+    return render(request, 'book.html', {'book': one_book, 'author_name': author_name, 'comments': comments})

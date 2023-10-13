@@ -48,8 +48,11 @@ class SignUpForm(UserCreationForm):
 
 # Create Add Record Form
 class AddBookForm(forms.ModelForm):
+    """Form for adding a book"""
+
     class Meta:
         model = Book
+        # Exclude user_add and cover because we fill it in a view.
         exclude = ('user_add', ' cover')
 
     title = forms.CharField(required=True, widget=forms.widgets.TextInput(
@@ -65,12 +68,16 @@ class AddBookForm(forms.ModelForm):
 
 
 class AddAuthorForm(forms.ModelForm):
+    """Form adding an author"""
+
     class Meta:
         model = Author
+        # Exclude user_add because we fill it in a view.
         exclude = ('user', 'user_add')
 
 
 class AddCommentForm(forms.ModelForm):
     class Meta:
         model = Comment
+        # Exclude user_add and book because we fill it in a view.
         exclude = ('user', 'user_add', 'book')
