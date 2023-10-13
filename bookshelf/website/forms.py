@@ -62,8 +62,6 @@ class AddBookForm(forms.ModelForm):
                                      widget=forms.widgets.DateInput(
                                          attrs={"placeholder": "Released at", "class": "form-control"}),
                                      label="")
-    # author = forms.ChoiceField(required=True,)
-    # cover = forms.ImageField()
 
 
 class AddAuthorForm(forms.ModelForm):
